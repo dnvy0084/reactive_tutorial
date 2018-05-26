@@ -38,13 +38,13 @@ function watch(target, prop) {
     
     Object.defineProperty(target, prop, {
     	get() {
-        	return this[`_${prop}`];
-		},
+	    return this[`_${prop}`];
+	},
         set(value) {
-        	this[`_${prop}`] = value;
+            this[`_${prop}`] = value;
             emitter.emit('change', value);
         }
-	});
+    });
     
     return emitter
 }
