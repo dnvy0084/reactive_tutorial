@@ -30,11 +30,11 @@ a의 값이 변경되면 c 변수를 갱신해줘야 하는건 마찬가지이�
 
 ### 반응형 변수
 
-예제코드 1에서 나온 변수 c는 a의 값에 *반응*합니다. 그러기 위해서 c는 a를 *관찰*하고 있어야 됩니다. 많이들 사용하는 EventEmitter가 비슷한 일을 하고 있는데요, EventEmitter를 통해 c가 자동갱신 되는 
+예제코드 1에서 나온 변수 c는 a의 값에 **반응**합니다. 그러기 위해서 c는 a를 **관찰**하고 있어야 됩니다. 많이들 사용하는 EventEmitter가 비슷한 일을 하고 있는데요, EventEmitter를 통해 c가 자동갱신되는 코드를 만들어봤습니다. 
 
 ```javascript 
 function watch(target, prop) {
-  	const emitter = new EventEmitter();
+    const emitter = new EventEmitter();
     
     Object.defineProperty(target, prop, {
     	get() {
@@ -52,9 +52,11 @@ function watch(target, prop) {
 watch(window, 'a').on('change', value => window.c = value + 1);
 
 a = 1;
-console.log(a, c);
+console.log(a, c); // 1 2
 
 a = 10;
-console.log(a, c);
+console.log(a, c); // 10 11
 ```
 + 예제 코드 2 [fiddle](https://jsfiddle.net/dnvy0084/2vanhgpq/)
+
+watch라는 함수를 통해 원하는 이름의 getter/setter를 설정하고 setter 함수에서 값이 변경될 경우 eventEmitter를 이용해 알려주는 형태입니다. a가 변경되면 c
