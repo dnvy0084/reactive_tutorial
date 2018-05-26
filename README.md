@@ -30,7 +30,7 @@ a의 값이 변경되면 c 변수를 갱신해줘야 하는건 마찬가지이�
 
 ### 반응형 변수
 
-예제코드 1에서 나온 변수 c는 a의 값에 ***반응***합니다. 그러기 위해서 c는 a를 ***관찰***하고 있어야 됩니다. 많이들 사용하는 EventEmitter가 비슷한 일을 하고 있는데요, EventEmitter를 통해 c가 자동갱신 되는 
+예제코드 1에서 나온 변수 c는 a의 값에 *반응*합니다. 그러기 위해서 c는 a를 *관찰*하고 있어야 됩니다. 많이들 사용하는 EventEmitter가 비슷한 일을 하고 있는데요, EventEmitter를 통해 c가 자동갱신 되는 
 
 ```javascript 
 function watch(target, prop) {
