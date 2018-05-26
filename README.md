@@ -5,9 +5,9 @@
 
 리액티브 관련 검색을 하면 보통 다음처럼 나옵니다.
 
-***"Reactive programming is programming with asynchronous data streams.
+***"Reactive programming is programming with asynchronous data streams.***
 
-***You can listen to that stream and react accordingly."
+***You can listen to that stream and react accordingly."***
 
 "리액티브 프로그래밍은 비동기 데이터 스트림을 사용한 프로그래밍이며, 듣고 반응할 수 있다." 정도로 해석할 수 있는데 당연하게도 처음 리액티브 프로그래밍을 접하는 사람에게는 별 도움이 되지 못하는 구문입니다. "객체 지향 프로그래밍에서 특정 객체를 생성하기 위한 일종의 틀"로 설명되는 클래스를 처음 배울 때와 비슷한 느낌이었는데, 클래스도 그렇지만 리액티브 프로그래밍도 어느정도 
 
