@@ -161,3 +161,57 @@ console.log(c); // 30
 rxjs의 operator가 처음으로 등장했네요. [combineLatest](http://reactivex.io/documentation/operators/combinelatest.html)는 두 개 이상의 스트림을 합치고 각 스트림의 값을 순서대로 배열로 만들어 다음 스트림으로 전달합니다. 그래서 subscribe에서는 ES6 비구조화 할당을 이용해 [a, b]로 받아 c에 대입하고 있습니다. 참고로 변수명을 a$라고 선언했는데요, reactivex의 암묵적인 룰 같은건데 $로 끝나는 변수는 스트림을 뜻합니다. combineLatest는 모든 스트림으로 부터 최소 한번은 데이터를 전달받아야 다음 스트림으로 데이터를 전달하기 때문에 undefined 체크가 필요없습니다. 
 
 비슷한 일을 하는 operator로 [zip](http://reactivex.io/documentation/operators/zip.html)이 있는데요, zip은 각 스트림의 값이 모두 변경되어야 다음으로 전달되는 반면, combineLatest는 가지고 있는 스트림 중 하나만 변경이 되어도 바로 다음으로 전달됩니다. 이를 이용하면 ```n = a + b + c + d + e```같은 코드도 예제 3-1과 크게 다를것 없이 구현할 수 있을 것 같네요. EventEmitter는... 확실히 간단하지는 않을 모양새입니다. 
+
+마지막으로 예제 코드 1이 아래 1-2처럼 변경이 되었다면 어떨까요? EventEmitter와 Observable로 각각 구현해 보겠습니다. 
+
+```javascript
+var a = 1
+  , b = 2
+  , c = a * a + b * b;
+```
++ 예제 코드 1-2
+
+먼저 EventEmitter입니다. 
+```javascript
+watch(window, 'a').on('change', value => add(a, b));
+watch(window, 'b').on('change', value => add(a, b));
+
+function add(a, b) {
+    if(typeof a === 'undefined' || typeof b === 'undefined') return;
+    
+    window.c = a * a + b * b;
+}
+
+a = 1;
+b = 2
+console.log(c); // 3
+
+a = 3;
+console.log(c); // 13
+b = 5;
+console.log(c); // 34
+```
++ 예제 코드 2-2 [fiddle](https://jsfiddle.net/dnvy0084/fu40m7bw/)
+
+바뀐 곳은 add 함수 내 window.c 값을 갱신하는 부분입니다. 다음은 Observable 코드와 비교해 보겟습니다.
+
+```javascript
+const square = n => n * n;
+const a$ = watch(window, 'a').map(square);
+const b$ = watch(window, 'b').map(square);
+
+a$.combineLatest(b$).subscribe(([a, b]) => window.c = a + b);
+
+a = 1;
+b = 2;
+console.log(c); // 5
+
+a = 3;
+console.log(c); // 13
+
+b = 5;
+console.log(c); // 34
+```
++ 예제 코드 3-2 [fiddle](https://jsfiddle.net/dnvy0084/k2hoaL0g/)
+
+Observable은 또다른 operator인 [map](http://reactivex.io/documentation/operators/map.html)이 등장했는데요, js array의 map과 동일한 함수로 콜백을 호출한 결과를 새로운 데이터로 배출합니다. 여기서는 ```n => n * n```이라는 콜백을 적용하여 subscribe전에 제곱한 값을 전달합니다. 
