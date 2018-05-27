@@ -214,4 +214,4 @@ console.log(c); // 34
 ```
 + 예제 코드 3-2 [fiddle](https://jsfiddle.net/dnvy0084/k2hoaL0g/)
 
-Observable은 또다른 operator인 [map](http://reactivex.io/documentation/operators/map.html)이 등장했는데요, js array의 map과 동일한 함수로 콜백을 호출한 결과를 새로운 데이터로 배출합니다. 여기서는 ```n => n * n```이라는 콜백을 적용하여 subscribe전에 제곱한 값을 전달합니다. 
+rxjs 또다른 operator인 [map](http://reactivex.io/documentation/operators/map.html)이 등장했는데요, js array의 map과 동일한 함수로 콜백을 호출한 결과를 새로운 데이터로 배출합니다. 여기서는 ```n => n * n```이라는 콜백을 적용하여 subscribe전에 제곱한 값을 전달합니다. 
