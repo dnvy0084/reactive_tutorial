@@ -65,7 +65,35 @@ watch라는 함수를 통해 원하는 이름의 getter/setter를 설정하고 s
 
 Rxjs는 [ReactiveX](http://reactivex.io/)라는 라이브러리의 javascript 버전입니다. ReactiveX는 마이크로소프트에서 시작한 리액티브 프로그래밍 라이브러리인데요, [Rx.NET](https://github.com/dotnet/reactive), [RxScala](https://github.com/ReactiveX/RxScala), [RxJava](https://github.com/ReactiveX/RxJava), [RxLua](https://github.com/bjornbytes/RxLua), [RxPY](https://github.com/ReactiveX/RxPY), [RxGo](https://github.com/ReactiveX/RxGo), [RxCpp](https://github.com/ReactiveX/RxCpp), [RxPHP](https://github.com/ReactiveX/RxPHP)등 들어봤을법한 언어는 모두 지원하고 있습니다. 그래서 어떤 언어로든 배우고 나면 다른 언어에서도 거의 동일한 인터페이스로 프로그래밍을 할 수 있습니다. 최근에 와서 Angular2에서 rxjs를 채용하거나 Netflix에서 RxJava를 만드는 등 reactivex가 주목을 받고 있는 것 같습니다. 
 
-각설하고 Rx는 Observable, Observer, Subscriber 3가지 키워드와 Observer를 제어할 수 있는 operators로 이루어져 있습니다. Observable은 ES6의 Promise와 비슷하거나 Promise를 강화한 버전이라고 생각하시면 됩니다. Promise는 처리할 일을 wrapping해서 해당 과정이 동기인지 비동기인지 상관없이 then() 체인 후 전달되는 값은 연산이 완료된 후라는 보장이 있는데요, Observable도 비슷하게 동작합니다. 다만 Observable은 map, filter, scan등 값을 원하는 형태로 변경하거나 zip, combineLatest, merge, forkJoin등 여러개의 Observable을 합치는 등 Promise에는 없는 굉장히 많은 기능들이 있습니다. 이런 (쓸데없을 정도로) 많은 기능이 rxjs를 배우는데 높은 진입장벽으로 작용하는 것도 사실입니다.;
+RxJS는 Observable, Observer, Subscriber 3가지 키워드와 Observer를 제어할 수 있는 operators로 이루어져 있습니다. Observable은 ES6의 Promise와 비슷하거나 Promise를 강화한 버전이라고 생각하시면 됩니다. Promise는 처리할 일을 wrapping해서 해당 과정의 비동기 여부와 상관없이 then() 체인으로 결과를 전달하는데요, Observable도 비슷하게 동작합니다. 다만 Observable은 map, filter, scan등 값을 원하는 형태로 변경하거나 zip, combineLatest, merge, forkJoin등 여러개의 Observable을 합치는 등 Promise에는 없는 굉장히 많은 기능들이 있습니다. 이런 (쓸데없을 정도로) 많은 기능이 rxjs를 배우는데 높은 진입장벽으로 작용하는 것도 사실입니다.;
+
+각설하고 실제 RxJs를 가지고 예제코드 2를 똑같이 구현해보겠습니다. (최신 버전이 6.x인데 ES6를 위한 개별 import 지원으로 cdn link 상태에서도 pipe 구문을 사용해야 되서 혼란을 피하기 위해 5.5버전을 사용했습니다.)
+
+```javascript
+function watch(target, prop) {
+    return Rx.Observable.create(observer => {
+    	Object.defineProperty(target, prop, {
+            get() {
+                return this[`_${prop}`];
+            },
+            set(value) {
+                this[`_${prop}`] = value;
+                observer.next(value);
+            }
+        });
+    });
+}
+
+watch(window, 'a').subscribe(value => window.c = value + 1);
+
+a = 1;
+console.log(a, c); // 1 2
+
+a = 10;
+console.log(a, c); // 10 11
+```
++ 예제 코드 3 - [fiddle](https://jsfiddle.net/dnvy0084/s8sm2jsj/)
+
 
 ```javascript
 var a = 1
