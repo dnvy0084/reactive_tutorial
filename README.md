@@ -94,6 +94,7 @@ console.log(a, c); // 10 11
 ```
 + 예제 코드 3 - [fiddle](https://jsfiddle.net/dnvy0084/s8sm2jsj/)
 
+```Rx.Observable.create```를 이용하여 원하는 어떤것도 Observable로 만들 수 있는데요, 여기서 이야기 하는 Observable 즉 **"관찰가능한"**이 리액티브 프로그래밍에서 말하는 스트림입니다. 외부로부터의 데이터만 스트림이 아니라 사용자 입력, 값의 변경, 배열, Iterator, Generator, 1, 2 같은 단순한 값까지 이 모든것을 **"스트림화"**
 
 ```javascript
 var a = 1
