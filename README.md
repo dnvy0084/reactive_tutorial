@@ -157,3 +157,5 @@ b = 20;
 console.log(c); // 30
 ```
 + 예제 코드 3-1 [fiddle](https://jsfiddle.net/dnvy0084/sz1s370d/)
+
+rxjs의 operator가 처음으로 등장했네요. [combineLatest](http://reactivex.io/documentation/operators/combinelatest.html)는 두 개 이상의 스트림을 합쳐서 각 스트림의 값을 순서대로 배열로 만들어, 다음 스트림으로 전달합니다. 그래서 subscribe에서는 ES6 비구조화 할당을 이용해 [a, b]로 받아 c에 대입하고 있습니다. 여기서 변수명을 a$라고 선언했는데요, reactivex의 암묵적인 룰 같은건데 $로 끝나는 변수는 스트림을 뜻합니다. 그리고 combineLatest는 모든 스트림으로 부터 최소 한번은 데이터를 전달받아야 다음 스트림으로   비슷한 일을 하는 operator로 zip이 있는데요, 
