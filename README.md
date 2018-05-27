@@ -134,4 +134,26 @@ console.log(c); // 12
 b = 20;
 console.log(c); // 30
 ```
-+ 예제 코드 2-2 [fiddle](https://jsfiddle.net/dnvy0084/gh84xovv/)
++ 예제 코드 2-1 [fiddle](https://jsfiddle.net/dnvy0084/gh84xovv/)
+
+a, b 두 변수 모두 watch를 이용해 값이 변경되는 시점에 add 함수를 호출하고 있습니다. 다만 a나 b 둘 중 하나만 값이 있는 경우가 있어 if를 이용해 undefined인지 체크를 해줘야 합니다. 혹은 watch를 하기 전에 _a, _b에 기본값을 설정해 놓는 방법도 있을 것 같은데요, 어찌됐건 신경써야 될 부분이 늘어난건 마찬가지입니다. c에서 참조하는 변수가 많으면 많을수록 걱정거리도 늘어나겠네요.
+
+이 코드를 Observable로 구현하면 이런류의 걱정거리를 줄일 수 있습니다. 다음은 Observable 코드입니다. 
+
+```javascript
+const a$ = watch(window, 'a');
+const b$ = watch(window, 'b');
+
+a$.combineLatest(b$).subscribe(([a, b]) => window.c = a + b);
+
+a = 1;
+b = 2;
+console.log(c); // 3
+
+a = 10;
+console.log(c); // 12
+
+b = 20;
+console.log(c); // 30
+```
++ 예제 코드 3-1 [fiddle](https://jsfiddle.net/dnvy0084/sz1s370d/)
