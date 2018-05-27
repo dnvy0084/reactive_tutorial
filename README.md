@@ -59,7 +59,7 @@ console.log(a, c); // 10 11
 ```
 + 예제 코드 2 [fiddle](https://jsfiddle.net/dnvy0084/2vanhgpq/)
 
-watch라는 함수를 통해 원하는 이름의 getter/setter를 설정하고 setter 함수에서 값이 변경될 경우 eventEmitter를 이용해 알려주는 형태입니다. a가 변경되면 event listener에서 c를 갱신해주고 있습니다. 별 문제없이 잘 작동하며 watch 함수를 제외하면 로직 자체도 굉장히 간단합니다.
+watch라는 함수를 통해 원하는 이름의 getter/setter를 설정하고 setter 함수에서 값이 변경될 경우 eventEmitter를 이용해 변경된 값을 알려주는 형태입니다. a가 변경되면 event listener에서 c를 갱신해주고 있는데요, 별 문제없이 작동하며 watch 함수를 제외하면 로직 자체도 굉장히 간단합니다.
 
 ```javascript
 var a = 1
