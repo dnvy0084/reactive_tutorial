@@ -30,7 +30,7 @@ a의 값이 변경되면 c 변수를 갱신해줘야 하는건 마찬가지이�
 
 ### 반응형 변수
 
-예제코드 1에서 나온 변수 c는 a의 값에 **반응**합니다. 그러기 위해서 c는 a를 **관찰**하고 있어야 됩니다. 많이들 사용하는 EventEmitter가 비슷한 일을 하고 있는데요, EventEmitter를 통해 c가 자동갱신되는 코드를 만들어봤습니다. 
+예제코드 1에서 나온 변수 c는 a의 값에 **반응**합니다. 그러기 위해서 c는 a를 **관찰**하고 있어야 됩니다. 많이들 사용하는 EventEmitter가 비슷한 일을 하고 있는데요, EventEmitter를 통해 c가 자동갱신되는 코드를 만들어 보겠습니다.
 
 ```javascript 
 function watch(target, prop) {
@@ -60,6 +60,12 @@ console.log(a, c); // 10 11
 + 예제 코드 2 [fiddle](https://jsfiddle.net/dnvy0084/2vanhgpq/)
 
 watch라는 함수를 통해 원하는 이름의 getter/setter를 설정하고 setter 함수에서 값이 변경될 경우 eventEmitter를 이용해 변경된 값을 알려주는 형태입니다. a가 변경되면 event listener에서 c를 갱신해주고 있는데요, 별 문제없이 작동하며 watch 함수를 제외하면 로직 자체도 굉장히 간단합니다.
+
+예제 코드 2를 리액티브 프로그래밍 라이브러리인 [rxjs](https://github.com/ReactiveX/rxjs)를 이용해서 동일하게 구현해 볼건데요, 그에 앞서 rxjs가 무엇인지 부터 잠깐 소개하고 넘어가겠습니다. 
+
+### Rxjs란
+
+Rxjs는 [ReactiveX](http://reactivex.io/)라는 라이브러리의 javascript 버전입니다. ReactiveX는 마이크로소프트에서 시작한 리액티브 프로그래밍 라이브러리인데요, [Rx.NET](https://github.com/dotnet/reactive), [RxScala](https://github.com/ReactiveX/RxScala), [RxJava](https://github.com/ReactiveX/RxJava), [RxLua](https://github.com/bjornbytes/RxLua), [RxPY](https://github.com/ReactiveX/RxPY), [RxGo](https://github.com/ReactiveX/RxGo), [RxCpp](https://github.com/ReactiveX/RxCpp), [RxPHP](https://github.com/ReactiveX/RxPHP)등 왠만한 언어는 
 
 ```javascript
 var a = 1
