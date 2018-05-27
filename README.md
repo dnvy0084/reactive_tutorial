@@ -94,7 +94,9 @@ console.log(a, c); // 10 11
 ```
 + 예제 코드 3 - [fiddle](https://jsfiddle.net/dnvy0084/s8sm2jsj/)
 
-```Rx.Observable.create```를 이용하여 원하는 어떤것도 Observable로 만들 수 있는데요, 여기서 이야기 하는 Observable 즉 **"관찰가능한"**이 리액티브 프로그래밍에서 말하는 스트림입니다. 외부로부터의 데이터만 스트림이 아니라 사용자 입력, 값의 변경, 배열, Iterator, Generator, 1, 2 같은 단순한 값까지 이 모든것을 **"스트림화"**
+```Rx.Observable.create```를 이용하여 원하는 어떤것도 Observable로 만들 수 있는데요, 여기서 이야기 하는 Observable 즉 **"관찰가능한"**이 리액티브 프로그래밍에서 말하는 스트림입니다. 외부로부터의 데이터만 스트림뿐만 아니라 사용자 입력이나 값의 변경, 배열같은 Iterator나 Generator 심지어 1, 2, 3... 같은 단순한 Number까지 이 모든것을 **"스트림화"**하여 프로그래밍합니다. 여기서는 setter 함수에서 변경되는 값을 observer라는 객체의 next 메소드를 이용해 스트림으로 바꿔주고 있습니다. 
+
+Promise가 생성자의 실행함수에서 resolve나 reject를 이용해 then으로 연결된 다음 콜백에 결과값이나 에러를 던져주는 것과 동일한 동작 방식입니다. 차이점은 Promise는 resolve나 reject를 호출하면 한번으로 끝인 반면 Observable은 observer.next()를 몇번이고 호출할 수 있습니다. 종료를 위해서는  observer.error(e)나 observer.complete()을 호출하여 완료를 알리고 스트림을 종료합니다. 
 
 ```javascript
 var a = 1
