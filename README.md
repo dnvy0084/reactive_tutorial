@@ -96,13 +96,42 @@ console.log(a, c); // 10 11
 
 ```Rx.Observable.create```를 이용하여 원하는 어떤것도 Observable로 만들 수 있는데요, 여기서 이야기 하는 Observable 즉 **관찰가능한**이 리액티브 프로그래밍에서 말하는 스트림입니다. 외부로부터의 데이터만 스트림이 아니라 사용자 입력이나 값의 변경, 배열같은 Iterator나 Generator 심지어 1, 2, 3... 같은 단순한 Number까지 이 모든것을 **스트림화**하여 프로그래밍합니다. 여기서는 setter 함수에서 변경되는 값을 observer라는 객체의 next 메소드를 이용해 스트림으로 바꿔주고 있습니다. 이렇게 next로 넘겨진 값은 operator거쳐 최종적으로 subscribe의 콜백에 도착합니다. 여기서는 다른 operator없이 바로 subscribe로 전달되어 EventEmitter 예제처럼 최종적으로 window.c 변수에 +1되어 저장됩니다. 
 
-Promise가 생성자의 실행함수에서 resolve나 reject를 이용해 then으로 연결된 다음 콜백에 결과값이나 에러를 던져주는 것과 동일한 동작 방식입니다. 차이점은 Promise는 resolve나 reject를 호출하면 한번으로 끝인 반면 Observable은 observer.next()를 몇번이고 호출할 수 있습니다. 그래서 setter의 값을 여러번 바꿔도 매번 subsribe의 콜백을 거쳐 c변수를 갱신합니다. 종료를 위해서는  observer.error(e)나 observer.complete()을 호출하여 완료를 알리고 스트림을 종료합니다. 
+Promise가 생성자의 실행함수에서 resolve나 reject를 이용해 then으로 연결된 다음 콜백에 결과값이나 에러를 던져주는 것과 동일한 동작 방식입니다. 차이점은 Promise는 resolve나 reject를 호출하면 한번으로 끝인 반면 Observable은 observer.next()를 몇번이고 호출할 수 있습니다. 그래서 setter의 값을 여러번 바꿔도 매번 subsribe의 콜백을 거쳐 c변수를 갱신합니다. 참고로 종료를 위해서는 observer.error(e)나 observer.complete()을 호출하여 완료를 알리고 스트림을 종료 할 수 있습니다.
+
+여기까지 봐서는 EventEmitter나 Observable이나 별 차이가 없어 보이는데요, 만약 아래처럼 c 변수가 a, b 두 개의 변수를 참조하고 있다면 어떻게 해야 될까요? EventEmitter로 먼저 구현해 보겠습니다. (watch 함수는 위와 같은 형태이니 생략하도록 하겠습니다.)
 
 ```javascript
 var a = 1
   , b = 2
   , c = a + b;
+  
+console.log(c) // 3
  
 a = 10;
-console.log(
+console.log(c) // 12
+
+b = 20;
+console.log(c) // 30
 ```
++ 예제 코드 1-1
+
+```javascript
+watch(window, 'a').on('change', value => add(a, b));
+watch(window, 'b').on('change', value => add(a, b));
+
+function add(a, b) {
+    if(typeof a === 'undefined' || typeof b === 'undefined') return;
+    
+    window.c = a + b;
+}
+
+a = 1;
+b = 2
+console.log(c); // 3
+
+a = 10;
+console.log(c); // 12
+b = 20;
+console.log(c); // 30
+```
++ 예제 코드 2-2 [fiddle](https://jsfiddle.net/dnvy0084/gh84xovv/)
