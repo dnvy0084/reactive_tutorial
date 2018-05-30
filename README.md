@@ -214,4 +214,15 @@ console.log(c); // 34
 ```
 + 예제 코드 3-2 [fiddle](https://jsfiddle.net/dnvy0084/k2hoaL0g/)
 
-rxjs 또다른 operator인 [map](http://reactivex.io/documentation/operators/map.html)이 등장했는데요, js array의 map과 동일한 함수로 콜백을 호출한 결과를 새로운 데이터로 배출합니다. 여기서는 ```n => n * n```이라는 콜백을 적용하여 subscribe전에 제곱한 값을 전달합니다. 
+rxjs operator [map](http://reactivex.io/documentation/operators/map.html)을 사용했는데요, js array의 map과 동일한 함수로 콜백을 호출한 결과값을 새로운 데이터로 배출합니다. 여기서는 ```n => n * n```이라는 콜백을 적용하여 subscribe전에 제곱한 값을 전달합니다. EventEmitter와 Observable 코드의 가장 큰 차이점은 로직의 분리라고 할 수 있습니다. ```window.c = a + b``` 코드를 dom 업데이트나 instance 변수에 값을 할당하는 등의 side effect가 발생할 여지가 있는 코드라고 보면, EventEmitter는 그런 코드와 데이터를 제어하는 코드가 혼재해 있는 반면, Observable은 자연스럽게 분리되 있습니다. 
+
+```javascript
+a$.combineLatest(b$)
+  .map(([a, b]) => a + b)
+  .subscribe(n => window.c = n);
+```
++ 예제 코드 3-3
+
+사실 Observable도 데이터 제어와 값 할당을 완벽히 분리하려면 위처럼 바꾸는게 맞을 것 같네요. 이런 로직의 분리는 함수형 언어의 지향점과 같다고 볼 수 있습니다. 함수형 언어는 "부가적인 입력이나 출력이 없는 순수 함수와, io를 처리하거나 UI를 처리하기 위해 부득이하게 글로벌 변수를 참조해야 하는 코드를 철저히 분리하자" 라는 컨셉을 가지고 있는데요, 그런면에서 EventEmitter는 add 함수를 따로 리팩토링할 필요가 있지만, Observable은 좀 더 쉽게(?) 분리된 코드를 짤 수 있습니다. 예제 코드 3-3에서 map의 콜백 ```([a, b]) => a + b``` 같은 함수는 단위 테스트하기 쉽다는 장점도 있겠네요. 
+
+리액티브 프로그래밍(RP)는 보통 함수형 리액티브 프로그래밍(FRP)과 
