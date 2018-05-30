@@ -57,7 +57,7 @@ console.log(a, c); // 1 2
 a = 10;
 console.log(a, c); // 10 11
 ```
-+ 예제 코드 2 [fiddle](https://jsfiddle.net/dnvy0084/2vanhgpq/)
++ 예제 코드 2 [fiddle](https://jsfiddle.net/dnvy0084/m9hvxmdc/)
 
 watch라는 함수를 통해 원하는 이름의 getter/setter를 설정하고 setter 함수에서 값이 변경될 경우 eventEmitter를 이용해 변경된 값을 알려주는 형태입니다. a가 변경되면 event listener에서 c를 갱신해주고 있는데요, 별 문제없이 작동하며 watch 함수를 제외하면 로직 자체도 굉장히 간단합니다. 예제 코드 2를 리액티브 프로그래밍 라이브러리인 [rxjs](https://github.com/ReactiveX/rxjs)를 이용해서 동일하게 구현해 볼건데요, 그에 앞서 rxjs가 무엇인지 부터 잠깐 소개하고 넘어가겠습니다. 
 
