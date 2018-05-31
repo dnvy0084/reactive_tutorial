@@ -291,5 +291,20 @@ function bindAsText(target, node) {
 
 이제 target object에 찾은 Text node를 바인딩 할 차례인데요, watch 후 suscribe 콜백에서 적절한 정규식으로 replace만 해주면 간단히 해결됩니다. subscribe 콜백은 bindAsText를 함수 스코프(부모 함수)로 갖는 클로져이기 때문에 bindAsText가 실행되는 순간 watch로 생성되는 Observable이 제어해야 될 node를 특정지을 수 있습니다. 그래서 따로 개별 Observable과 제어해야 될 node를 저장하지 않아도 됩니다. 글로벌로 접근할 수 있는 map같은 객체에 map.set('name', node) 형식으로 저장한다면, target이 여러개인 경우는 따로 생성을 해야 될지 등 신경써야 될 부분이 늘어나게 될 것 같네요. [관심사의 분리](https://en.wikipedia.org/wiki/Separation_of_concerns)라는 입장에서 보면 좋은 방법은 아닙니다. 
 
+```javascript
+const vue = {}
+const el = document.querySelector('#target');
+
+const subscriptions = getTextNodes(el).map(child => bindAsText(vue, child));
+
+vue.name = 'moonee';
+vue.age = 6;
+```
++ 예제 코드 4-4
+
+이제 마지막으로 적용할 element를 찾아 각 Text node마다 bindAsText를 호출해 주면 됩니다. 그리고 vue라는 object와 연결을 해놓았으니 vue.name, vue.age를 바꾸면 html의 textContent가 바로 업데이트 될 것입니다. 전체 코드는 [fiddle](https://jsfiddle.net/dnvy0084/90uj35sx/)에서 확인하실 수 있습니다.
+
+
+
 
 리액티브 프로그래밍(RP)은 보통 함수형 리액티브 프로그래밍(FRP)과 같이 나오곤 합니다. 그만큼 함수형 언어가 가지고 있는 특징들을 많이 구현하고 있습니다. 그래서 처음에는 ramda같은 함수형 라이브러리 + rxjs를 이용해 FRP의 형태로 코드를 짜려고 노력했었는데요, 리액티브도 생소한데 몸에 맞지도 않는 함수형 언어 형태로 개발을 하려니 진행은 안되고 시간만 잡아먹었던 것 같습니다. 우선 배우는 단계에서는 ugly한 코드라도 구현을 우선하고 
