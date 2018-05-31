@@ -227,9 +227,9 @@ a$.combineLatest(b$)
 
 여기까지 EventEmitter와 Observable을 비교해서 보여드렸는데, 어떻게 다르고 어떤 장점을 가지고 있는지 잘 전달이 되었나 모르겠네요. 다음은 Observable을 이용해 실질적인 도움이 될 만한 코드를 구현해보겠습니다. 
 
-### Dom control
+### Vue.js
 
-FE 업무 중 큰 부분이 dom을 제어하는 일이라 생각하는데요, 위에 만든 watch 함수를 이용해 object의 속성을 바꾸면 해당되는 엘리먼트가 업데이트 되면 좋을 것 같습니다. [vue.js](https://kr.vuejs.org/v2/guide/index.html)가 이런 형식으로 dom을 제어하고 있으니 인터페이스를 동일하게 가져가겠습니다. 
+FE 업무 중 큰 부분이 dom을 제어하는 일이라 생각하는데요, 위에 만든 watch 함수를 이용해 object의 속성을 바꾸면 해당되는 엘리먼트가 업데이트 되면 좋을 것 같습니다. [Vue.js](https://kr.vuejs.org/v2/guide/index.html)가 이런 형식으로 dom을 제어하고 있으니 인터페이스를 동일하게 구현해보겠습니다.
 
 
 
