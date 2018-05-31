@@ -272,6 +272,24 @@ function getTextNodes(el, nodes = []) {
 ```
 + 예제 코드 4-2
 
+코드 4-2의 forEach는 element.childNodes 같은 NodeList 객체가 인터페이스는 배열이면서 .forEach를 지원하지 않아 forEach 대용으로 만들었습니다. 그리고 getTextNodes를 통해 Text element이면서 ```{{}}``` 이런 mustache 구문을 가진 element만 찾아서 반환합니다. 
+
+```javascript
+/**
+ * target 객체에 mustache 구문 내 변수 이름으로 속성을 추가하고 해당 엘리먼트에 바인딩한다. 
+ **/
+function bindAsText(target, node) {
+    const textContent = node.textContent;
+    const regex = /{{\w+}}/g;
+    const key = textContent.match(regex)[0].match(/\w+/g)[0];
+    
+    return watch(target, key)
+    	.subscribe(value => node.textContent = textContent.replace(regex, value));
+}
+```
++ 예제 코드 4-3
+
+이제 target object에 찾은 Text node를 바인딩 할 차례인데요, watch 후 suscribe 콜백에서 적절한 정규식으로 replace만 해주면 간단히 해결됩니다. subscribe 콜백은 bindAsText를 함수 스코프(부모 함수)로 갖는 클로져이기 때문에 bindAsText가 실행되는 순간 watch로 생성되는 Observable이 제어해야 될 node를 특정지을 수 있습니다. 그래서 따로 개별 Observable과 제어해야 될 node를 저장하지 않아도 됩니다. 글로벌로 접근할 수 있는 map같은 객체에 map.set('name', node) 형식으로 저장한다면, target이 여러개인 경우는 따로 생성을 해야 될지 등 신경써야 될 부분이 늘어나게 될 것 같네요. [관심사의 분리](https://en.wikipedia.org/wiki/Separation_of_concerns)라는 입장에서 보면 좋은 방법은 아닙니다. 
 
 
 리액티브 프로그래밍(RP)은 보통 함수형 리액티브 프로그래밍(FRP)과 같이 나오곤 합니다. 그만큼 함수형 언어가 가지고 있는 특징들을 많이 구현하고 있습니다. 그래서 처음에는 ramda같은 함수형 라이브러리 + rxjs를 이용해 FRP의 형태로 코드를 짜려고 노력했었는데요, 리액티브도 생소한데 몸에 맞지도 않는 함수형 언어 형태로 개발을 하려니 진행은 안되고 시간만 잡아먹었던 것 같습니다. 우선 배우는 단계에서는 ugly한 코드라도 구현을 우선하고 
