@@ -233,10 +233,18 @@ FE 업무 중 큰 부분이 dom을 제어하는 일이라 생각하는데요, �
 
 ```html
 <div id="target">
-    <span>{{name}}</span>
-    <span>{{age}}</span>
+    <div class="name">
+        <span>name:</span>
+        <span>{{name}}</span>    
+    </div>
+    <div class="age">
+        <span>age:</span>
+        <span>{{age}}</span>    
+    </div>
 </div>
 ```
++ 예제 코드 4-1
 
+코드 4-1처럼 html을 만들었습니다. span 태그의 textContent를 mustache 템플릿 구문으로 
 
 리액티브 프로그래밍(RP)은 보통 함수형 리액티브 프로그래밍(FRP)과 같이 나오곤 합니다. 그만큼 함수형 언어가 가지고 있는 특징들을 많이 구현하고 있습니다. 그래서 처음에는 ramda같은 함수형 라이브러리 + rxjs를 이용해 FRP의 형태로 코드를 짜려고 노력했었는데요, 리액티브도 생소한데 몸에 맞지도 않는 함수형 언어 형태로 개발을 하려니 진행은 안되고 시간만 잡아먹었던 것 같습니다. 우선 배우는 단계에서는 ugly한 코드라도 구현을 우선하고 
