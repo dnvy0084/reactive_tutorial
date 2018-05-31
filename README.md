@@ -302,7 +302,7 @@ vue.age = 6;
 ```
 + 예제 코드 4-4
 
-이제 마지막으로 적용할 element를 찾아 각 Text node마다 bindAsText를 호출해 주면 됩니다. 그리고 vue라는 object와 연결을 해놓았으니 vue.name, vue.age를 바꾸면 html의 textContent가 바로 업데이트 될 것입니다. 전체 코드는 [fiddle](https://jsfiddle.net/dnvy0084/90uj35sx/)에서 확인하실 수 있습니다.
+이제 마지막으로 적용할 element를 찾아 각 Text node마다 bindAsText를 호출해 주면 됩니다. vue라는 object와 연결을 해놓았으니 vue.name, vue.age를 바꾸면 html의 textContent가 바로 업데이트 될 것입니다. 전체 코드는 [fiddle](https://jsfiddle.net/dnvy0084/90uj35sx/)에서 확인하실 수 있습니다.
 
 
 
