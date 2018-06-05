@@ -311,5 +311,59 @@ vue.age = 6;
 
 ### Method Observable
 
-다음은 조금 더 복잡한 예제입니다. 임의의 함수 호출 결과를 textContent로 대입할 수 있도록 할건데요, 리액티브 프로그래밍답게 함수 내부에서 참조한 변수 값의 변경이 있으면 함수를 호출해서 해당 엘리먼트가 업데이트 될 수 있도록 하겠습니다. [i18n](https://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C%ED%99%94%EC%99%80_%EC%A7%80%EC%97%AD%ED%99%94) 같은 다국어 처리가 예제로 적격일 것 같습니다. FE에서 다국어 처리 시 언어코드에 따라 해당 언어에 맞는 텍스트를 보여주기 위해 ```i18n(locale, key)``` 같은 형태의 함수 호출로 텍스트를 가져오는데요, 리액티브 프로그래밍스럽게 가져온 텍스트가 보여져야 할 엘리먼트까지 길(stream)을 잡아주고, 관찰중인 변수(locale)가 업데이트 되면 해당 언어로 바뀌도록 하겠습니다.
+다음은 조금 더 복잡한 예제입니다. 임의의 함수 호출 결과를 textContent로 대입할 수 있도록 할건데요, 리액티브 프로그래밍답게 함수 내부에서 참조한 변수 값의 변경이 있으면 함수를 호출해서 해당 엘리먼트가 업데이트 될 수 있도록 하겠습니다. [i18n](https://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C%ED%99%94%EC%99%80_%EC%A7%80%EC%97%AD%ED%99%94) 같은 다국어 처리가 예제로 적격일 것 같네요. FE에서 다국어 처리 시 언어코드에 따라 해당 언어에 맞는 텍스트를 보여주기 위해 ```i18n(locale, key)``` 같은 형태의 함수 호출로 텍스트를 가져오는데요, 리액티브 프로그래밍스럽게 가져온 텍스트가 보여져야 할 엘리먼트까지 길(stream)을 잡아주고, 관찰중인 변수(locale)가 업데이트 되면 해당 언어로 바뀌도록 하겠습니다.
 
+이전 예제에 기능을 더하는 형식으로 코드를 구현하고, 리팩토링도 같이 진행하겠습니다. 우선 vue라는 target 객체의 data model의 수정이 필요합니다.
+
+```javascript
+const vue = {
+  data: {
+    name: 'moonee',
+    age: 6,
+    locale: 1
+  },
+  methods: {
+    i18n(key) {
+    	return i18n(this.locale, key);
+    }
+  }
+}
+```
++ 예제 코드 5-1
+
+단순히 데이터만 가지고 있는 data object와 함수를 가지고 있는 methods object 두 부분으로 나눴습니다.(Vue.js와 동일한 인터페이스입니다.) data는 직접 '관찰'하거나 함수를 통해 '관찰' 가능한 반응형 변수들을 모아놓았고, methods는 그런 변수가 변경되면 해당 함수를 호출하여 필요한 결과값을 전달하기 위한 함수를 모아놓았습니다. 그래서 methods의 i18n 함수 내부에서 참조하는 this.locale은 data의 locale을 ```watch```하도록 할건데요, 그러기 위해 bindAsText에서 필요한 key를 찾아 stream을 구독하는 로직이 예제 5-2처럼 변경되었습니다.
+
+```javascript
+/**
+ * target 객체에 mustache 구문 내 변수 이름으로 속성을 추가하고 해당 엘리먼트에 바인딩한다. 
+ **/
+function bindAsText(target, node) {
+  const textContent = node.textContent;
+  const regex = /{{[^}]+}}/g;
+  const key = textContent.match(regex)[0].match(/[^{}]+/g)[0];
+    
+  return getObservable(target, key)
+    .subscribe(value => node.textContent = textContent.replace(regex, value));
+}
+```
++ 예제 코드 5-2
+
+{{}} 내부에 변수명 뿐만 아니라 함수 호출을 위해 괄호나 쉼표가 올 수 있기 때문에 정규식이 ```/{{\w}}/g```에서 ```/{{[^}]+}}/g```로 변경되었고, watch를 바로 호출 할 수 없어 getObservable을 통해 data observable인지 method observable인지를 구분했습니다. 
+
+```javascript
+function getObservable(target, key) {
+  const propertyName = key.match(/^\w+/)[0];
+  const params = (key.match(/\([^\)]+\)/g) || [''])[0].match(/[^,()]+/g);
+
+  if(target.data.hasOwnProperty(propertyName))
+    return getDataObservable(target, propertyName);
+      
+  if(target.methods.hasOwnProperty(propertyName))
+    return getMethodsObservable(target, propertyName, params);
+    
+  console.warn('cannot find key', key);
+}
+```
++ 예제 코드 5-3
+
+getObservable에서는 propertyName과 params를 찾는 
