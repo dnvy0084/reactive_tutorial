@@ -313,7 +313,23 @@ vue.age = 6;
 
 다음은 조금 더 복잡한 예제입니다. 임의의 함수 호출 결과를 textContent로 대입할 수 있도록 할건데요, 리액티브 프로그래밍답게 함수 내부에서 참조한 변수 값의 변경이 있으면 함수를 호출해서 해당 엘리먼트가 업데이트 될 수 있도록 하겠습니다. [i18n](https://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C%ED%99%94%EC%99%80_%EC%A7%80%EC%97%AD%ED%99%94) 같은 다국어 처리가 예제로 적격일 것 같네요. FE에서 다국어 처리 시 언어코드에 따라 해당 언어에 맞는 텍스트를 보여주기 위해 ```i18n(locale, key)``` 같은 형태의 함수 호출로 텍스트를 가져오는데요, 리액티브 프로그래밍스럽게 가져온 텍스트가 보여져야 할 엘리먼트까지 길(stream)을 잡아주고, 관찰중인 변수(locale)가 업데이트 되면 해당 언어로 바뀌도록 하겠습니다.
 
-이전 예제에 기능을 더하는 형식으로 코드를 구현하고, 리팩토링도 같이 진행하겠습니다. 우선 vue라는 target 객체의 data model의 수정이 필요합니다.
+이전 예제에 기능을 더하는 형식으로 코드를 구현하고, 리팩토링도 같이 진행하겠습니다. 
+
+```javascript
+<div id="target">
+    <div class="name">
+        <span>{{i18n(NAME)}}:</span>
+        <span>{{name}}</span>    
+    </div>
+    <div class="age">
+        <span>{{i18n(AGE)}}:</span>
+        <span>{{age}}</span>    
+    </div>
+</div>
+```
++ 예제 코드 5
+
+렌더링할 html인데, name과 age앞에 다국어 처리되어야 할 text가 추가되었습니다. locale이 바뀌면 NAME, AGE가 해당 언어로 업데이트 될 것입니다. 다음으로 vue라는 target 객체의 data model이 수정되었습니다. 
 
 ```javascript
 const vue = {
@@ -331,7 +347,7 @@ const vue = {
 ```
 + 예제 코드 5-1
 
-단순히 데이터만 가지고 있는 data object와 함수를 가지고 있는 methods object 두 부분으로 나눴습니다.(Vue.js와 동일한 인터페이스입니다.) data는 직접 '관찰'하거나 함수를 통해 '관찰' 가능한 반응형 변수들을 모아놓았고, methods는 그런 변수가 변경되면 해당 함수를 호출하여 필요한 결과값을 전달하기 위한 함수를 모아놓았습니다. 그래서 methods의 i18n 함수 내부에서 참조하는 this.locale은 data의 locale을 ```watch```하도록 할건데요, 그러기 위해 bindAsText에서 필요한 key를 찾아 stream을 구독하는 로직이 예제 5-2처럼 변경되었습니다.
+단순히 데이터만 가지고 있는 data object와 함수를 가지고 있는 methods object 두 부분으로 나눴습니다.(Vue.js와 동일한 인터페이스입니다.) data는 직접 '관찰'하거나 함수를 통해 '관찰' 가능한 반응형 변수들을 모아두고, methods는 그런 변수가 변경되면 해당 함수를 호출하여 필요한 결과값을 전달하기 위한 함수를 모아놓았습니다. 그래서 methods의 i18n 함수 내부에서 참조하는 this.locale은 data의 locale을 ```watch```하도록 할건데요, 그러기 위해 bindAsText에서 필요한 key를 찾아 stream을 구독하는 로직이 아래처럼 변경되었습니다.
 
 ```javascript
 /**
@@ -366,4 +382,4 @@ function getObservable(target, key) {
 ```
 + 예제 코드 5-3
 
-getObservable에서는 propertyName과 params를 찾는 
+getObservable에서는 propertyName과 함수 매개변수 용 params를 분리하고, hasOwnProperty를 통해 data와 methods로 분기처리 하였습니다. key에 맞는 Observable이 없을 경우 필요하다면 throw Error로 어플리케이션을 
