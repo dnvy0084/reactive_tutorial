@@ -382,4 +382,26 @@ function getObservable(target, key) {
 ```
 + 예제 코드 5-3
 
-getObservable에서는 propertyName과 함수 매개변수 용 params를 분리하고, hasOwnProperty를 통해 data와 methods로 분기처리 하였습니다. key에 맞는 Observable이 없을 경우 필요하다면 throw Error로 어플리케이션을 
+getObservable에서는 propertyName과 함수 매개변수 용 params를 분리하고, hasOwnProperty를 통해 data와 methods로 분기처리 하였습니다. getDataObservable에서는 이전처럼 watch stream을 반환해주면 되고 getMethodsObservable은 참조 변수가 변경되면 해당 함수를 실행하여 결과값을 전달하는 stream을 반환하면 됩니다. 
+
+```javascript
+function getDataObservable(target, property) {
+  return watch(target, property);
+}
+
+function getMethodsObservable(target, property, params) {
+  const func = target.methods[property];
+  const funcStr = func.toString();
+  const data$ = funcStr                 // 함수 코드
+    .match(/this\.\w+/g)                // "this.variable" 텍스트 매칭
+    .map(k => k.replace(/^this\./, '')) // 매칭된 텍스트에서 "this." 제거
+    .map(k => getObservable(target, k)) // 해당 변수의 Observable 배열로 변환
+    .reduce((a$, b$) => a$.combineLatest(b$)); // combineLatest를 이용해 하나의 Stream으로 변환
+
+  return data$
+    .map(_ => func.apply(target, params));
+}
+```
++ 예제 코드 5-3
+
+[Function.prototype.toString](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/toString)은 함수 코드를 string으로 반환해 주는데요, 거기서 ```this.variable```을 정규식을 이용해 바인딩 해야 될 변수명을 알 수 있습니다. 바인딩 변수가 하나 이상일 수 있으니 찾은 변수를 getObservable을 이용해 모두 Observable로 변환 후 combineLatest를 통해 하나의 Observable로 합칩니다. 이렇게 하나 이상의 Observable을 합칠 수 있는 operator는 combineLatest이외에도 zip과 merge, concat, join등이 있는데요, zip은 합친 Observable 모두가 변경되어야 다음 stream으로 전달되고, merge는 하나만 변경되도 다음 stream으로 전달되는 등 동작 방식이 조금씩 다릅니다. 그래서 적절한 operator를 사용하기 위해 
