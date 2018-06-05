@@ -304,11 +304,6 @@ vue.age = 6;
 
 이제 마지막으로 적용할 element를 찾아 각 Text node마다 bindAsText를 호출해 주면 됩니다. vue라는 object와 연결을 해놓았으니 vue.name, vue.age를 바꾸면 html의 textContent가 바로 업데이트 될 것입니다. 전체 코드는 [fiddle](https://jsfiddle.net/dnvy0084/90uj35sx/)에서 확인하실 수 있습니다.
 
-
-
-
-리액티브 프로그래밍(RP)은 보통 함수형 리액티브 프로그래밍(FRP)과 같이 나오곤 합니다. 그만큼 함수형 언어가 가지고 있는 특징들을 많이 구현하고 있습니다. 그래서 처음에는 ramda같은 함수형 라이브러리 + rxjs를 이용해 FRP의 형태로 코드를 짜려고 노력했었는데요, 리액티브도 생소한데 몸에 맞지도 않는 함수형 언어 형태로 개발을 하려니 진행은 안되고 시간만 잡아먹었던 것 같습니다. 우선 배우는 단계에서는 ugly한 코드라도 구현을 우선하고 
-
 ### Method Observable
 
 다음은 조금 더 복잡한 예제입니다. 임의의 함수 호출 결과를 textContent로 대입할 수 있도록 할건데요, 리액티브 프로그래밍답게 함수 내부에서 참조한 변수 값의 변경이 있으면 함수를 호출해서 해당 엘리먼트가 업데이트 될 수 있도록 하겠습니다. [i18n](https://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C%ED%99%94%EC%99%80_%EC%A7%80%EC%97%AD%ED%99%94) 같은 다국어 처리가 예제로 적격일 것 같네요. FE에서 다국어 처리 시 언어코드에 따라 해당 언어에 맞는 텍스트를 보여주기 위해 ```i18n(locale, key)``` 같은 형태의 함수 호출로 텍스트를 가져오는데요, 리액티브 프로그래밍스럽게 가져온 텍스트가 보여져야 할 엘리먼트까지 길(stream)을 잡아주고, 관찰중인 변수(locale)가 업데이트 되면 해당 언어로 바뀌도록 하겠습니다.
@@ -476,6 +471,29 @@ Rx.Observable.merge(a$, b$, c$).subscribe(
   () => console.log('complete')
 )
 ```
-+ 예제 코드 6 [fiddle](https://jsfiddle.net/dnvy0084/rL4kbgdk/10/)
++ 예제 코드 6 [fiddle](https://jsfiddle.net/dnvy0084/rL4kbgdk/12/)
 
-예제 코드 6을 실행시켜보면 merge를 이용해서 하나의 Observable로 합친 후 한번만 subscribe 했지만 3번의 로그가 찍히는 걸 볼 수 있는데요, 이처럼 Rx.Observable.create는 subscribe 시점에 wrapping 함수를 실행하기 때문에 결과적으로 locale을 두 번 참조하는 예제 5는 런타임 에러가 발생합니다. 이런 경우 [share](http://reactivex.io/documentation/operators/refcount.html) operator를 사용해 캐싱된 데이터로
+예제 코드 6을 실행시켜보면 merge를 이용해서 하나의 Observable로 합친 후 한번만 subscribe 했지만 3번의 로그가 찍히는 걸 볼 수 있는데요, 이처럼 Rx.Observable.create는 subscribe 시점에 wrapping 함수를 실행하기 때문에 결과적으로 locale을 두 번 참조하는 예제 5는 런타임 에러가 발생합니다. 이런 경우 [share](http://reactivex.io/documentation/operators/refcount.html) operator를 사용해 여러번의 create없이 캐싱된 데이터를 전달 받을 수 있습니다. share를 사용해도 watch를 중복 실행시키면 동일한 결과이기 때문에 getDataObservable을 아래 5-5처럼 수정하였습니다. 
+
+```javascript
+/**
+ * watch를 실행하여 Observable을 반환한다. 
+ **/
+function getDataObservable(target, property) {
+  if(typeof target[`${property}\$`] === 'undefined')
+    target[`${property}\$`] = watch(target, property).share();
+
+  return target[`${property}\$`];
+}
+```
++ 예제 코드 5-5
+
+target객체에 property$이란 이름으로 Observable을 share한 후 저장합니다. 그리고 해당 property에 저장한 Observable을 반환하면 Observable도 캐싱, stream용 데이터도 캐싱해서 사용할 수 있습니다. 이제 동적으로 vue.locale을 이용해 언어셋을 변경하거나 vue.name과 vue.age를 이용해 텍스트를 업데이트 할 수 있습니다. 간단한 예제를 위해 textContent만 업데이트 했는데, 같은 방법으로 attribute, class, style, value나 innerHTML같은 속성 등 거의 모든것을 제어하도록 만들 수 있습니다. 전체 코드는 [fiddle](https://jsfiddle.net/dnvy0084/4uqgd8aw/4/)에서 보실 수 있습니다. 
+
+### 결론
+
+기존 프로그래밍 방식에 비해 어떤 이점이 있는지 비교가 되었으면 좋겠는데, 어땠는지 잘 모르겠네요. 요즘 왠만한 언어들은 모두 함수형 언어의 컨셉이나 방식을 차용하기 위해 노력하는 것 같습니다. 리액티브 프로그래밍(RP)도 함수형 리액티브 프로그래밍(FRP)과 같이 취급될 정도로 함수형 언어가 가지고 있는 특징들을 많이 구현하고 있습니다. 그래서 처음에는 ramda같은 함수형 라이브러리 + rxjs를 이용해 FRP의 형태로 코드를 짜려고 노력했었는데요, 리액티브도 생소한데 몸에 맞지도 않는 함수형 언어 형태로 개발을 하려니 진행은 안되고 시간만 잡아먹었던 것 같습니다. 더구나 리액티브 프로그래밍 관련해서 검색을 해보면 "Everything is Stream"을 강조하며 모든것을 스트림으로 처리해야되라고 강요하곤 합니다. 
+
+개인적으로 습득하는 단계에서는 ugly한 코드라도 어떻게든 구현을 우선으로 하여, 필요한 곳에 조금씩 사용해보는게 좋을 것 같습니다. Promise와 닮은꼴이라 기존에 Proimse로 처리한 부분을 Observable로 모두 대체할 수 있는데요, 그렇게 비동기 처리도 해보고 [from](http://reactivex.io/documentation/operators/from.html)을 통해 iterator에 담긴 데이터 제어나 [fromEvent](http://reactivex.io/documentation/operators/from.html)를 통해 사용자 입력등도 처리해 보면 조금씩 리액티브 프로그래밍에 대해 알게 되리라 생각합니다.
+
+긴 글 읽어주셔서 감사합니다.
