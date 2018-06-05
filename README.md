@@ -404,4 +404,8 @@ function getMethodsObservable(target, property, params) {
 ```
 + 예제 코드 5-3
 
-[Function.prototype.toString](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/toString)은 함수 코드를 string으로 반환해 주는데요, 거기서 ```this.variable```을 정규식을 이용해 바인딩 해야 될 변수명을 알 수 있습니다. 바인딩 변수가 하나 이상일 수 있으니 찾은 변수를 getObservable을 이용해 모두 Observable로 변환 후 combineLatest를 통해 하나의 Observable로 합칩니다. 이렇게 하나 이상의 Observable을 합칠 수 있는 operator는 combineLatest이외에도 zip과 merge, concat, join등이 있는데요, zip은 합친 Observable 모두가 변경되어야 다음 stream으로 전달되고, merge는 하나만 변경되도 다음 stream으로 전달되는 등 동작 방식이 조금씩 다릅니다. 그래서 적절한 operator를 사용하기 위해 
+[Function.prototype.toString](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/toString)은 함수 코드를 string으로 반환해 주는데요, 거기서 ```this.variable```을 정규식을 이용해 바인딩 해야 될 변수명을 알 수 있습니다. 바인딩 변수가 하나 이상일 수 있으니 찾은 변수를 getObservable을 이용해 모두 Observable로 변환 후 combineLatest를 통해 하나의 Observable로 합칩니다. 
+
+이렇게 하나 이상의 Observable을 합칠 수 있는 operator는 combineLatest이외에도 zip과 merge, concat, join등이 있는데요, zip은 합친 Observable 모두가 변경되어야 다음 stream으로 전달되고, merge는 하나만 변경되도 다음 stream으로 전달되는 등 동작 방식이 조금씩 다릅니다. 그래서 적절한 operator를 사용하기 위해 많이 알고 있어야 한다는게 ReactiveX의 진입 장벽이기도 합니다. 다만 ReactiveX 측도 이런 문제점을 알고 있는지 이 [페이지](http://reactivex.io/documentation/ko/operators.html)처럼 Observable 연산자 결정 트리를 제공해 상황에 맞는 operator를 쉽게 찾을 수 있도록 배려해 놓았습니다. 
+
+다시 예제 5-3으로 돌아와서 하나로 합친 Observable을 데이터가 도착하면(관찰중인 변수에 값이 변경되면) map을 통해 func을 실행하고 그 결과값을 다음 stream으로 전달합니다. 이때 함수 내부에서 ```this.locale```로 변수를 참조하고 있으니 [Function.prototype.apply](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)를 이용하면 this 객체에 vue를 바인딩할 수 있습니다. 
