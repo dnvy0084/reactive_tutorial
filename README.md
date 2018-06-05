@@ -411,17 +411,26 @@ function getMethodsObservable(target, property, params) {
 다시 예제 5-3으로 돌아와서 하나로 합친 Observable을 데이터가 도착하면(관찰중인 변수에 값이 변경되면) map을 통해 func을 실행하고 그 결과값을 다음 stream으로 전달합니다. 이때 함수 내부에서 ```this.locale```로 변수를 참조하고 있으니 [Function.prototype.apply](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)를 이용하여 this 객체에 vue를 바인딩하면 ```this.locale```에 변경된 값을 설정하거나 할 필요없이 그대로 호출 후 결과값을 반환할 수 있습니다. 
 
 ```javascript
-function i18n(locale, key) {
-  const map = {
-    NAME: ['이름', 'name'],
-    AGE: ['나이', 'age']
-  };
-  
-  if(!map[key]) return key;
-  
-  return map[key][locale];
+/**
+ * 다국어 텍스트 hashMap
+ **/
+const map = {
+  NAME: ['이름', 'name'],
+  AGE: ['나이', 'age']
 }
 
+/**
+ * i18n 다국어 처리 함수 - 설정된 map의 key 배열에 locale번째 텍스트를 반환한다. 
+ **/
+function _i18n(map) {
+  return function(locale, key) {
+    if(!map[key]) return key;
+
+    return map[key][locale];
+  }
+} 
+
+const i18n = _i18n(map);
 
 /**
  * target element에서 Text Node를 찾아 vue 객체의 속성과 binding한다. 
@@ -443,4 +452,30 @@ each(vue.data, (v, k) => vue[k] = v);
 ```
 + 예제 코드 5-4
 
-이제 실제 다국어 처리 함수와 실행 코드인데요, 
+이제 실제 다국어 처리 함수와 실행 코드인데요, 다국어 처리에서 언어셋의 경우 어플리케이션 실행 시 한번 설정되는게 대부분이니 5-4처럼 클로져를 통해서만 접근할 수 있도록 하는게 조금 더 안전성을 높이는 방법인것 같습니다. 그리고 마지막으로 for..in loop를 통해 vue.data의 모든 속성들을 vue 객체의 각 속성 초기값으로 할당해 엘리먼트를 업데이트 합니다. 그러면 보란듯이 실행될 것 같지만 런타임 에러가 납니다. 이유는 watch 함수내에 Rx.Observable.create의 wrapping 함수 때문인데요, 이 함수는 Observable을 subscribe할 때마다 실행되고 중복된 setter 설정으로 인해 오류가 발생합니다.
+
+```javascript
+function createTest(e) {
+    return Rx.Observable.create(observer => {
+    console.log('Observable.create', e);
+    
+    setTimeout(() => {
+    	observer.next(e);
+        observer.complete();
+    }, 500);
+  })
+}
+
+const a$ = createTest('a');
+const b$ = createTest('b');
+const c$ = createTest('c');
+
+Rx.Observable.merge(a$, b$, c$).subscribe(
+  e => console.log('next', e),
+  console.warn,
+  () => console.log('complete')
+)
+```
++ 예제 코드 6 [fiddle](https://jsfiddle.net/dnvy0084/rL4kbgdk/10/)
+
+예제 코드 6을 실행시켜보면 merge를 이용해서 하나의 Observable로 합친 후 한번만 subscribe 했지만 3번의 로그가 찍히는 걸 볼 수 있는데요, 이처럼 Rx.Observable.create는 subscribe 시점에 wrapping 함수를 실행하기 때문에 결과적으로 locale을 두 번 참조하는 예제 5는 런타임 에러가 발생합니다. 이런 경우 [share](http://reactivex.io/documentation/operators/refcount.html) operator를 사용해 캐싱된 데이터로
