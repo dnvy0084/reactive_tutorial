@@ -12,7 +12,7 @@
 "리액티브 프로그래밍은 비동기 데이터 스트림을 사용한 프로그래밍이며, 듣고 반응할 수 있다." 정도로 해석할 수 있는데 당연하게도 처음 리액티브 프로그래밍을 접하는 사람에게는 별 도움이 되지 못하는 구문입니다. "객체 지향 프로그래밍에서 특정 객체를 생성하기 위한 일종의 틀"로 설명되는 클래스를 처음 배웠을 때와 비슷한 느낌이네요.
 클래스도 그렇지만 리액티브 프로그래밍도 어느정도 알고나야 이해가 될 구문이라 고개만 끄덕이고 넘어가면 될 것 같습니다. 
 
-저 구문은 비동기 데이터 스트림을 우선 하고 있는데, 데이터 스트림은 도구이고 주 목적은 reactive에 있다고 생각합니다. "반응하는"이란 뜻인데 말 그대로 어떤 값의 변경이 그와 관련된 다른 값을 자동으로 갱신하거나 정해진 일을 수행하도록 프로그래밍하는 거라고 볼 수 있습니다.
+또한 저 구문에서는 비동기 데이터 스트림을 우선 하고 있는데, 데이터 스트림은 도구이고 주 목적은 reactive에 있다고 생각합니다. "반응하는"이란 말 그대로 어떤 값의 변경이 그와 관련된 다른 값을 자동으로 갱신하거나 정해진 일을 수행하도록 프로그래밍하는 것이라고 볼 수 있습니다.
 
 ```javascript 
 let a = 3
@@ -24,9 +24,9 @@ let a = 3
 + 예제 코드 1
 
 예제 코드 1을 실행하면 c의 값은 4인데요, 리액티브 프로그래밍의 관점에서 보면 ```a = 4```를 입력했으니 ```c = a + 1```이 갱신되어 log에 5가 출력되어야 합니다.
-예제 코드가 마이크로소프트의 엑셀이고 c 셀은 a 셀에 1을 더한 값을 가지도록 함수를 설정한거라고 보면 될 것 같네요. 당연한거지만 c가 5가되려면 ```c = a + 1```을 한번 더 호출해줘야 되는데요, 리액티브 프로그래밍이라고 다르진 않습니다. 
+예제 코드가 마이크로소프트의 엑셀이고 c 셀은 a 셀에 1을 더한 값을 가지도록 함수를 설정한거라고 보면 될 것 같네요. 당연한 이야기지만 c가 5가되려면 ```c = a + 1```을 한번 더 호출해줘야 되는데요, 리액티브 프로그래밍이라고 다르진 않습니다. 
 
-a의 값이 변경되면 c 변수를 갱신해줘야 하는건 마찬가지이지만 절차적 언의의 방법과는 차이가 있습니다. 바로 스트림이라는 개념을 가져온건데요, 리액티브 프로그래밍에서는 "Everything is Stream"이란 말이 있을 정도로 스트림을 이용해 모든것을 처리하고 있습니다. 객체 지향 언어가 각 할일을 가진 여러개의 객체를 통해 주어진 일을 처리한다면, 리액티브 프로그래밍은 스트림을 통해 데이터의 흐름을 미리 선언함으로서 일을 처리하도록 만듭니다. 앞으로 예제 코드1을 직접 구현해보면서 스트림이 무엇이고 왜 사용하는지에 대해 알아보겠습니다.
+a의 값이 변경되면 c 변수를 갱신해줘야 하는건 같지만 절차적 언의의 방법과는 차이가 있습니다. 바로 스트림이라는 개념을 가져온건데요, 리액티브 프로그래밍에서는 "Everything is Stream"이란 말이 있을 정도로 스트림을 이용해 모든것을 처리합니다. 객체 지향 언어가 각각의 할일을 가진 여러개의 객체를 통해 주어진 일을 처리한다면, 리액티브 프로그래밍은 스트림을 통해 데이터의 흐름을 미리 선언함으로서 일을 처리하도록 만듭니다. 앞으로 예제 코드1을 직접 구현해보면서 스트림이 무엇이고 왜 사용하는지에 대해 알아보겠습니다.
 
 ### 반응형 변수
 
@@ -63,9 +63,9 @@ watch라는 함수를 통해 원하는 이름의 getter/setter를 설정하고 s
 
 ### Rxjs란
 
-Rxjs는 [ReactiveX](http://reactivex.io/)라는 라이브러리의 javascript 버전입니다. ReactiveX는 마이크로소프트에서 시작한 리액티브 프로그래밍 라이브러리인데요, [Rx.NET](https://github.com/dotnet/reactive), [RxScala](https://github.com/ReactiveX/RxScala), [RxJava](https://github.com/ReactiveX/RxJava), [RxLua](https://github.com/bjornbytes/RxLua), [RxPY](https://github.com/ReactiveX/RxPY), [RxGo](https://github.com/ReactiveX/RxGo), [RxCpp](https://github.com/ReactiveX/RxCpp), [RxPHP](https://github.com/ReactiveX/RxPHP)등 들어봤을법한 언어는 모두 지원하고 있습니다. 그래서 어떤 언어로든 배우고 나면 다른 언어에서도 거의 동일한 인터페이스로 프로그래밍을 할 수 있습니다. 최근에 와서 Angular2에서 rxjs를 채용하거나 Netflix에서 RxJava를 만드는 등 reactivex가 주목을 받고 있는 것 같습니다. 
+Rxjs는 [ReactiveX](http://reactivex.io/)라는 라이브러리의 javascript 버전입니다. ReactiveX는 마이크로소프트에서 시작한 리액티브 프로그래밍 라이브러리인데요, [Rx.NET](https://github.com/dotnet/reactive), [RxScala](https://github.com/ReactiveX/RxScala), [RxJava](https://github.com/ReactiveX/RxJava), [RxLua](https://github.com/bjornbytes/RxLua), [RxPY](https://github.com/ReactiveX/RxPY), [RxGo](https://github.com/ReactiveX/RxGo), [RxCpp](https://github.com/ReactiveX/RxCpp), [RxPHP](https://github.com/ReactiveX/RxPHP)등 굉장히 많은 언어를 지원하고 있습니다. 그래서 어떤 언어로든 배우면 다른 언어에서도 거의 동일한 인터페이스로 프로그래밍을 할 수 있습니다. 최근에 와서 Angular2에서 rxjs를 채용하거나 Netflix에서 RxJava를 만드는 등 reactivex가 주목을 받고 있는 것 같습니다. 
 
-RxJS는 Observable, Observer, Subscriber 3가지 키워드와 Observer를 제어할 수 있는 operators로 이루어져 있습니다. Observable은 ES6의 Promise와 비슷하거나 Promise를 강화한 버전이라고 생각하시면 됩니다. Promise는 처리할 일을 wrapping해서 해당 과정의 비동기 여부와 상관없이 then() 체인으로 결과를 전달하는데요, Observable도 비슷하게 동작합니다. 다만 Observable은 map, filter, scan등 값을 원하는 형태로 변경하거나 zip, combineLatest, merge, forkJoin등 여러개의 Observable을 합치는 등 Promise에는 없는 굉장히 많은 기능들이 있습니다. 이런 (쓸데없을 정도로) 많은 기능이 rxjs를 배우는데 높은 진입장벽으로 작용하는 것도 사실입니다.;
+RxJS는 Observable, Observer, Subscriber 3가지 키워드와 Observer를 제어할 수 있는 operators로 이루어져 있습니다. Observable은 ES6의 Promise와 비슷하거나 Promise를 강화한 버전이라고 생각하시면 됩니다. Promise는 처리할 일을 wrapping해서 해당 과정의 비동기 여부와 상관없이 then() 체인으로 결과를 전달하는데요, Observable도 비슷하게 동작합니다. 다만 Observable은 map, filter, scan등 값을 원하는 형태로 변경하거나 zip, combineLatest, merge, forkJoin등 여러개의 Observable을 합치는 등 Promise에는 없는 굉장히 많은 기능들이 있습니다. 이런 (쓸데없을 정도로) 많은 기능이 rxjs를 배우는데 높은 진입장벽으로 작용하는 것도 사실입니다.
 
 각설하고 실제 RxJs를 가지고 예제코드 2를 똑같이 구현해보겠습니다. (최신 버전이 6.x인데 ES6를 위한 개별 import 지원으로 cdn link 상태에서도 pipe 구문을 사용해야 되서 혼란을 피하기 위해 5.5버전을 사용했습니다.)
 
@@ -94,11 +94,11 @@ console.log(a, c); // 10 11
 ```
 + 예제 코드 3 - [fiddle](https://jsfiddle.net/dnvy0084/s8sm2jsj/)
 
-```Rx.Observable.create```를 이용하여 원하는 어떤것도 Observable로 만들 수 있는데요, 여기서 이야기 하는 Observable 즉 **관찰가능한**이 리액티브 프로그래밍에서 말하는 스트림입니다. 외부로부터의 데이터만 스트림이 아니라 사용자 입력이나 값의 변경, 배열같은 Iterator나 Generator 심지어 1, 2, 3... 같은 단순한 Number까지 이 모든것을 **스트림화**하여 프로그래밍합니다. 여기서는 setter 함수에서 변경되는 값을 observer라는 객체의 next 메소드를 이용해 스트림으로 바꿔주고 있습니다. 이렇게 next로 넘겨진 값은 operator를 거쳐 최종적으로 subscribe의 콜백에 도착합니다. 여기서는 다른 operator없이 바로 subscribe로 전달되어 EventEmitter 예제처럼 최종적으로 window.c 변수에 +1되어 저장됩니다. 
+```Rx.Observable.create```를 이용하여 원하는 어떤것도 Observable로 만들 수 있는데요, 여기서 이야기 하는 Observable 즉 **관찰가능한**이 리액티브 프로그래밍에서 말하는 스트림입니다. 외부로부터의 데이터만 스트림이 아니라 사용자 입력이나 값의 변경, 배열같은 Iterator나 Generator 심지어 1, 2, 3... 같은 단순한 Number까지 이 모든것을 **스트림화**하여 프로그래밍합니다. 여기서는 setter 함수에서 변경되는 값을 observer라는 객체의 next 메소드를 이용해 스트림으로 바꿔주고 있습니다. 이렇게 next로 넘겨진 값은 operator를 거쳐 최종적으로 subscribe의 콜백에 도착합니다. 여기서는 다른 operator없이 바로 subscribe로 전달되어 EventEmitter 예제처럼 최종적으로 window.c 변수에 +1하여 저장합니다.
 
-Promise가 생성자의 실행함수에서 resolve나 reject를 이용해 then으로 연결된 다음 콜백에 결과값이나 에러를 던져주는 것과 동일한 동작 방식입니다. 차이점은 Promise는 resolve나 reject를 호출하면 한번으로 끝인 반면 Observable은 observer.next()를 몇번이고 호출할 수 있습니다. 그래서 setter의 값을 여러번 바꿔도 매번 subsribe의 콜백을 거쳐 c변수를 갱신합니다. 참고로 종료를 위해서는 observer.error(e)나 observer.complete()을 호출하여 완료를 알리고 스트림을 종료 할 수 있습니다.
+Promise가 생성자의 실행함수에서 resolve나 reject를 이용해 then으로 연결된 콜백에 결과값이나 에러를 던져주는 것과 동일한 동작 방식입니다. 차이점은 Promise는 resolve나 reject를 호출하면 한번으로 끝인 반면 Observable은 observer.next()를 몇번이고 호출할 수 있습니다. 그래서 setter의 값을 여러번 바꿔도 매번 subsribe의 콜백을 거쳐 c변수를 갱신합니다. 참고로 종료를 위해서는 observer.error(err)나 observer.complete()을 호출하여 완료를 알리고 스트림을 종료 할 수 있습니다.
 
-여기까지 봐서는 EventEmitter나 Observable이나 별 차이가 없어 보이는데요, 만약 아래처럼 c 변수가 a, b 두 개의 변수를 참조하고 있다면 어떻게 해야 될까요? EventEmitter로 먼저 구현해 보겠습니다. (watch 함수는 위와 같은 형태이니 생략하도록 하겠습니다.)
+여기까지는 EventEmitter나 Observable이나 별 차이가 없어 보이는데요, 만약 아래처럼 c 변수가 a, b 두 개의 변수를 참조하고 있다면 어떻게 해야 될까요? EventEmitter로 먼저 구현해 보겠습니다. (watch 함수는 위와 같은 형태이니 생략하도록 하겠습니다.)
 
 ```javascript
 var a = 1
@@ -229,7 +229,7 @@ a$.combineLatest(b$)
 
 ### Vue.js
 
-FE 업무 중 큰 부분이 dom을 제어하는 일이라 생각하는데요, 위에 만든 watch 함수를 이용해 object의 속성을 바꾸면 해당되는 엘리먼트가 업데이트 되면 좋을 것 같습니다. [Vue.js](https://kr.vuejs.org/v2/guide/index.html)가 이런 형식으로 dom을 제어하고 있으니 인터페이스를 동일하게 구현해보겠습니다.
+FE 업무 중 큰 부분이 dom을 제어하는 일이라 생각하는데요, 위에 만든 watch 함수를 이용해 객체의 속성을 바꾸면 연결된 엘리먼트가 갱신 되면 좋을 것 같습니다. [Vue.js](https://kr.vuejs.org/v2/guide/index.html)가 이런 형식으로 dom을 제어하고 있으니 인터페이스를 동일하게 구현해보겠습니다.
 
 ```html
 <div id="target">
@@ -306,7 +306,7 @@ vue.age = 6;
 
 ### Method Observable
 
-다음은 조금 더 복잡한 예제입니다. 임의의 함수 호출 결과를 textContent로 대입할 수 있도록 할건데요, 리액티브 프로그래밍답게 함수 내부에서 참조한 변수 값의 변경이 있으면 함수를 호출해서 해당 엘리먼트가 업데이트 될 수 있도록 하겠습니다. [i18n](https://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C%ED%99%94%EC%99%80_%EC%A7%80%EC%97%AD%ED%99%94) 같은 다국어 처리가 예제로 적격일 것 같네요. FE에서 다국어 처리 시 언어코드에 따라 해당 언어에 맞는 텍스트를 보여주기 위해 ```i18n(locale, key)``` 같은 형태의 함수 호출로 텍스트를 가져오는데요, 리액티브 프로그래밍스럽게 가져온 텍스트가 보여져야 할 엘리먼트까지 길(stream)을 잡아주고, 관찰중인 변수(locale)가 업데이트 되면 해당 언어로 바뀌도록 하겠습니다.
+다음은 조금 더 복잡한 예제입니다. 임의의 함수 호출 결과를 textContent로 대입할 수 있도록 할건데요, 리액티브 프로그래밍답게 함수 내부에서 참조한 변수 값의 변경이 있으면 함수를 호출해서 해당 엘리먼트가 갱신되게 하겠습니다. [i18n](https://ko.wikipedia.org/wiki/%EA%B5%AD%EC%A0%9C%ED%99%94%EC%99%80_%EC%A7%80%EC%97%AD%ED%99%94) 같은 다국어 처리가 예제로 적격일 것 같네요. FE에서 다국어 처리 시 언어코드에 따라 해당 언어에 맞는 텍스트를 보여주기 위해 ```i18n(locale, key)``` 같은 형태의 함수 호출로 텍스트를 가져오는데요, 리액티브 프로그래밍스럽게 가져온 텍스트가 보여져야 할 엘리먼트까지 길(stream)을 잡아주고, 관찰중인 변수(locale)가 업데이트 되면 해당 언어로 바뀌도록 하겠습니다.
 
 이전 예제에 기능을 더하는 형식으로 코드를 구현하고, 리팩토링도 같이 진행하겠습니다. 
 
@@ -401,7 +401,7 @@ function getMethodsObservable(target, property, params) {
 
 [Function.prototype.toString](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/toString)은 함수 코드를 string으로 반환해 주는데요, 거기서 ```this.locale```을 정규식을 이용해 찾을 수 있습니다. 참조하는 this 변수가 하나 이상일 수 있으니 getObservable을 이용해 모두 Observable로 변환 후 combineLatest를 통해 하나의 Observable로 합칩니다. 
 
-이렇게 하나 이상의 Observable을 합칠 수 있는 operator는 combineLatest이외에도 zip과 merge, concat, join등이 있는데요, zip은 합친 Observable 모두가 변경되어야 다음 stream으로 전달되고, merge는 하나만 변경되도 다음 stream으로 전달되는 등 동작 방식이 조금씩 다릅니다. 그래서 적절한 operator를 사용하기 위해 많이 알고 있어야 한다는게 ReactiveX의 진입 장벽이기도 합니다. 다만 ReactiveX 측도 이런 문제점을 알고 있는지 이 [페이지](http://reactivex.io/documentation/ko/operators.html)처럼 Observable 연산자 결정 트리를 제공해 상황에 맞는 operator를 쉽게 찾을 수 있도록 배려해 놓았습니다. 
+이렇게 하나 이상의 Observable을 합칠 수 있는 operator는 combineLatest이외에도 zip과 merge, concat, join등이 있는데요, zip은 합친 Observable 모두가 변경되어야 다음 stream으로 전달되고, merge는 하나만 변경되도 다음 stream으로 전달되는 등 동작 방식이 조금씩 다릅니다. 그래서 적절한 operator를 사용하기 위해 operator를 많이 알고 있어야 한다는게 ReactiveX의 진입 장벽이기도 합니다. 다만 ReactiveX 측도 이런 문제점을 알고 있는지 이 [페이지](http://reactivex.io/documentation/ko/operators.html)처럼 Observable 연산자 결정 트리를 제공해 상황에 맞는 operator를 쉽게 찾을 수 있도록 배려해 놓았습니다. 
 
 다시 예제 5-3으로 돌아와서 하나로 합친 Observable을 데이터가 도착하면(관찰중인 변수에 값이 변경되면) map을 통해 func을 실행하고 그 결과값을 다음 stream으로 전달합니다. 이때 함수 내부에서 ```this.locale```로 변수를 참조하고 있으니 [Function.prototype.apply](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)를 이용하여 this 객체에 vue를 바인딩하면 ```this.locale```에 변경된 값을 설정하거나 할 필요없이 그대로 호출 후 결과값을 반환할 수 있습니다. 
 
@@ -447,7 +447,7 @@ each(vue.data, (v, k) => vue[k] = v);
 ```
 + 예제 코드 5-4
 
-이제 실제 다국어 처리 함수와 실행 코드인데요, 다국어 처리에서 언어셋의 경우 어플리케이션 실행 시 한번 설정되는게 대부분이니 5-4처럼 클로져를 통해서만 접근할 수 있도록 하는게 조금 더 안전성을 높이는 방법인것 같습니다. 그리고 마지막으로 for..in loop를 통해 vue.data의 모든 속성들을 vue 객체의 각 속성 초기값으로 할당해 엘리먼트를 업데이트 합니다. 그러면 보란듯이 실행될 것 같지만 런타임 에러가 납니다. 이유는 watch 함수내에 Rx.Observable.create의 wrapping 함수 때문인데요, 이 함수는 Observable을 subscribe할 때마다 실행되고 중복된 setter 설정으로 인해 오류가 발생합니다.
+이제 실제 다국어 처리 함수와 실행 코드인데요, 다국어 처리에서 언어셋의 경우 어플리케이션 실행 시 한번 설정되는게 대부분이니 5-4처럼 클로져를 통해서만 접근할 수 있도록 하는게 조금 더 안전성을 높이는 방법인것 같습니다. 그리고 마지막으로 for..in loop를 통해 vue.data의 모든 속성들을 vue 객체의 각 속성 초기값으로 할당해 엘리먼트를 업데이트 합니다. 그러면 보란듯이 실행될 것 같지만 런타임 에러가 납니다. 이유는 watch 함수내에 Rx.Observable.create의 wrapping 함수 때문인데요, 이 함수는 Observable을 subscribe할 때마다 실행됩니다. 그래서 중복된 이름으로 setter를 설정하려고 해서 오류가 발생합니다.
 
 ```javascript
 function createTest(e) {
@@ -488,7 +488,7 @@ function getDataObservable(target, property) {
 ```
 + 예제 코드 5-5
 
-target객체에 property$이란 이름으로 Observable을 share한 후 저장합니다. 그리고 해당 property에 저장한 Observable을 반환하면 Observable도 캐싱, stream용 데이터도 캐싱해서 사용할 수 있습니다. 이제 동적으로 vue.locale을 이용해 언어셋을 변경하거나 vue.name과 vue.age를 이용해 텍스트를 업데이트 할 수 있습니다. 간단한 예제를 위해 textContent만 업데이트 했는데, 같은 방법으로 attribute, class, style, value나 innerHTML같은 속성 등 거의 모든것을 제어하도록 만들 수 있습니다. 전체 코드는 [fiddle](https://jsfiddle.net/dnvy0084/4uqgd8aw/4/)에서 보실 수 있습니다. 
+target객체에 property + '$'란 이름으로 share한 Observable을 저장합니다. 그리고 해당 property에 저장한 Observable을 반환하면 Observable도 캐싱, stream용 데이터도 캐싱해서 사용할 수 있습니다. 이제 동적으로 vue.locale을 이용해 언어셋을 변경하거나 vue.name과 vue.age를 이용해 텍스트를 업데이트 할 수 있습니다. 간단한 예제를 위해 textContent만 업데이트 했는데, 같은 방법으로 attribute, class, style, value나 innerHTML같은 속성 등 거의 모든것을 제어하도록 만들 수 있습니다. 전체 코드는 [fiddle](https://jsfiddle.net/dnvy0084/4uqgd8aw/4/)에서 보실 수 있습니다. 
 
 ### 결론
 
